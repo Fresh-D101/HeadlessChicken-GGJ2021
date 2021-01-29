@@ -1,13 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Breakable : MonoBehaviour
 {
     void Start()
     {
-        particles = GetComponentsInChildren<Rigidbody>();
+        m_Particles = GetComponentsInChildren<Rigidbody>();
     }
+    
+    //////////////////////////////////////////////////////////////////////////
     
     public void Break()
     {
@@ -15,11 +15,13 @@ public class Breakable : MonoBehaviour
         transform.DetachChildren();
         Destroy(gameObject);
  
-        foreach (var fragment in particles)
+        foreach (var fragment in m_Particles)
         {
             fragment.isKinematic = false;
         }
     }
     
-    private Rigidbody[] particles;
+    //////////////////////////////////////////////////////////////////////////
+    
+    private Rigidbody[] m_Particles;
 }

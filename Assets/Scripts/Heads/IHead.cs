@@ -4,6 +4,6 @@ public interface IHead
 {
     GameObject gameObj { get; }
     
-    void OnPickup(SimpleMove owner);
-    void OnDrop(SimpleMove owner);
+    void OnPickup(SimpleMove _owner);
+    void OnDrop(SimpleMove _owner);
 }
