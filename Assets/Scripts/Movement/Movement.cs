@@ -43,7 +43,7 @@ namespace Player
 
         private void Move()
         {
-            m_TargetVelocity = this.transform.forward * m_VerticalInput * m_MaximumVelocity;
+            m_TargetVelocity = this.transform.forward * (m_VerticalInput * m_MaximumVelocity);
             m_AppliedVelocity = m_TargetVelocity - m_Rigidbody.velocity;
             Vector2 clampedVelocity = Vector2.ClampMagnitude(new Vector2(m_AppliedVelocity.x, m_AppliedVelocity.z), m_Acceleration);
             m_AppliedVelocity.x = clampedVelocity.x;

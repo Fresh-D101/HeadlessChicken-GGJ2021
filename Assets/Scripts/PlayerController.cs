@@ -22,41 +22,21 @@ namespace Player
             m_HorizontalInput = Input.GetAxisRaw("Horizontal");
             m_VerticalInput = Input.GetAxisRaw("Vertical");
             if (Input.GetButtonDown("Jump")) m_JumpInput = true;
+            if (Input.GetKeyDown(KeyCode.X)) DropHead();
 
             m_Rigidbody.MoveRotation(Quaternion.Euler(0, this.transform.localEulerAngles.y + m_HorizontalInput * m_Rotation, 0));
         }
-
-        //////////////////////////////////////////////////////////////////////////
-
-        private void OnTriggerEnter(Collider _otherCollider)
-        {
-            if (_otherCollider.CompareTag(m_ClimableTag))
-            {
-                CanClimb = true;
-            }
-        }
-
+        
         //////////////////////////////////////////////////////////////////////////
 
         private void OnTriggerStay(Collider _otherCollider)
         {
-            if (Input.GetButtonDown("Interact") && _otherCollider.TryGetComponent<IHead>(out IHead newHead))
+            if (Input.GetButtonDown("Interact") && _otherCollider.TryGetComponent<Head>(out var newHead))
             {
                 EquipHead(newHead);
-                _otherCollider.enabled = false;
             }
         }
-
-        //////////////////////////////////////////////////////////////////////////
-
-        private void OnTriggerExit(Collider _otherCollider)
-        {
-            if (_otherCollider.CompareTag(m_ClimableTag))
-            {
-                CanClimb = false;
-            }
-        }
-
+        
         //////////////////////////////////////////////////////////////////////////
 
         #region Movement
@@ -73,7 +53,7 @@ namespace Player
 
         private void Move()
         {
-            m_TargetVelocity = this.transform.forward * m_VerticalInput * MaximumVelocity;
+            m_TargetVelocity = transform.forward * (m_VerticalInput * MaximumVelocity);
             m_AppliedVelocity = m_TargetVelocity - m_Rigidbody.velocity;
             Vector2 clampedVelocity = Vector2.ClampMagnitude(new Vector2(m_AppliedVelocity.x, m_AppliedVelocity.z), m_Acceleration);
             m_AppliedVelocity.x = clampedVelocity.x;
@@ -97,12 +77,18 @@ namespace Player
 
         //////////////////////////////////////////////////////////////////////////
 
-        private void EquipHead(IHead _head)
+        private void EquipHead(Head _head)
         {
+            DropHead();
             m_EquippedHead = _head;
-            _head.gameObj.transform.SetPositionAndRotation(m_HeadPosition.position, m_HeadPosition.rotation);
-            _head.gameObj.gameObject.transform.SetParent(m_HeadPosition);
-            m_EquippedHead.OnPickup(this);
+            m_EquippedHead.OnPickup(this, m_HeadPosition);
+        }
+
+        private void DropHead()
+        {
+            if (ReferenceEquals(m_EquippedHead, null)) return;
+            m_EquippedHead.OnDrop(this);
+            m_EquippedHead = null;
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -140,6 +126,6 @@ namespace Player
         [SerializeField, ReadOnlyField] private bool m_IsGrounded = false;
         [SerializeField, ReadOnlyField, EndGroup] private bool m_CanClimb = false;
 
-        private IHead m_EquippedHead = null;
+        private Head m_EquippedHead = null;
     }
 }

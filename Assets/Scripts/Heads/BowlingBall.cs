@@ -1,26 +1,26 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class BowlingBall : MonoBehaviour, IHead
+public class BowlingBall : Head
 {
-    public void OnPickup(Player.PlayerController _owner)
+    protected override void  OnPickup()
     {
-        m_Owner = _owner;
         m_OriginalSpeed = m_Owner.MaximumVelocity;
         m_Owner.MaximumVelocity = m_NewSpeed;
     }
 
     //////////////////////////////////////////////////////////////////////////
 
-    public void OnDrop(Player.PlayerController _owner)
+    protected override void OnDrop()
     {
         m_Owner.MaximumVelocity = m_OriginalSpeed;
-        m_Owner = null;
     }
 
     //////////////////////////////////////////////////////////////////////////
 
     private void OnTriggerEnter(Collider other)
     {
+        if (m_Owner is null) return;
+        
         if (other.CompareTag("Breakable"))
         {
             other.GetComponent<Breakable>()?.Break();
@@ -35,6 +35,5 @@ public class BowlingBall : MonoBehaviour, IHead
 
     [SerializeField] private float m_NewSpeed = 0;
     [Separator]
-    [SerializeField, ReadOnlyField] private Player.PlayerController m_Owner = null;
     [SerializeField, ReadOnlyField] private float m_OriginalSpeed = 0;
 }

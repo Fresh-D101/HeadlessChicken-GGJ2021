@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Hammer : MonoBehaviour,IHead
+public class Hammer : Head
 {
     private void OnTriggerEnter(Collider _other)
     {
@@ -19,28 +19,8 @@ public class Hammer : MonoBehaviour,IHead
             m_Owner.CanClimb = false;
         }
     }
-
-    //////////////////////////////////////////////////////////////////////////
-
-    public GameObject gameObj => gameObject;
-
-    //////////////////////////////////////////////////////////////////////////
-
-    public void OnPickup(Player.PlayerController _owner)
-    {
-        m_Owner = _owner;
-    }
-
-    //////////////////////////////////////////////////////////////////////////
-
-    public void OnDrop(Player.PlayerController _owner)
-    {
-        m_Owner = null;
-    }
-
+    
     //////////////////////////////////////////////////////////////////////////
 
     [SerializeField, TagSelector] private string m_ClimbableTag = string.Empty;
-    [Separator]
-    [SerializeField, ReadOnlyField] private Player.PlayerController m_Owner;
 }
