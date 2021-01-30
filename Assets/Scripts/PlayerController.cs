@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEditor.IMGUI.Controls;
+using UnityEngine;
 
 namespace Player
 {
@@ -24,7 +26,7 @@ namespace Player
         {
             // Interaction and Head Inputs
             if (Input.GetKeyDown(KeyCode.X)) DropHead();
-            m_InteractionInput = Input.GetButtonDown("Interact");
+            if (Input.GetButtonDown("Interact")) CheckForHead();
 
             if (BlockInputs) return;
 
@@ -34,18 +36,7 @@ namespace Player
             if (Input.GetButtonDown("Jump")) m_JumpInput = true;
             m_Rigidbody.MoveRotation(Quaternion.Euler(0, this.transform.localEulerAngles.y + m_HorizontalInput * m_Rotation, 0));
         }
-
-        //////////////////////////////////////////////////////////////////////////
-
-        private void OnTriggerStay(Collider _otherCollider)
-        {
-            if (m_InteractionInput && _otherCollider.TryGetComponent<Head>(out var newHead))
-            {
-                EquipHead(newHead);
-                m_InteractionInput = false;
-            }
-        }
-
+        
         //////////////////////////////////////////////////////////////////////////
 
         #region Movement
@@ -121,6 +112,18 @@ namespace Player
 
         //////////////////////////////////////////////////////////////////////////
 
+        private void CheckForHead()
+        {
+            var nearest = new Collider[1];
+            var heads = Physics.OverlapSphereNonAlloc(transform.position, 2, nearest,m_HeadLayer);
+            if (heads != 0)
+            {
+                EquipHead(nearest[0].GetComponent<Head>());
+            }
+        }
+        
+        //////////////////////////////////////////////////////////////////////////
+
         private void EquipHead(Head _head)
         {
             DropHead();
@@ -154,7 +157,8 @@ namespace Player
         [BeginGroup("Ground Check")]
         [SerializeField] private Transform m_GroundedCheck = null;
         [SerializeField] private float m_GroundedCheckRadius = 0;
-        [SerializeField, EndGroup] private LayerMask m_GroundedCheckLayers = default;
+        [SerializeField] private LayerMask m_GroundedCheckLayers = default;
+        [SerializeField, EndGroup] private LayerMask m_HeadLayer = default;
 
         [BeginGroup("Movement")]
         [SerializeField] private float m_Acceleration = 0;
@@ -163,17 +167,13 @@ namespace Player
         [SerializeField] private float m_JumpDelay = 0;
         [Separator]
         [SerializeField, EndGroup] private float m_MaximumVelocity = 0;
-
-        [BeginGroup("Movement")]
-        [SerializeField, TagSelector, EndGroup] private string m_ClimableTag = string.Empty;
-
+        
         [BeginGroup("Information")]
         [SerializeField, ReadOnlyField] private bool m_blockInputs;
         [Separator]
         [SerializeField, ReadOnlyField] private float m_HorizontalInput = 0;
         [SerializeField, ReadOnlyField] private float m_VerticalInput = 0;
         [SerializeField, ReadOnlyField] private bool m_JumpInput = false;
-        [SerializeField, ReadOnlyField] private bool m_InteractionInput = false;
         [Separator]
         [SerializeField, ReadOnlyField] private Vector3 m_TargetVelocity = Vector3.zero;
         [SerializeField, ReadOnlyField] private Vector3 m_AppliedVelocity = Vector3.zero;
