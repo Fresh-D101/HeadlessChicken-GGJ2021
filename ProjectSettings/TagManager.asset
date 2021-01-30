@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Breakable
   - Climbable
+  - CameraAnchor
+  - CameraTrigger
   layers:
   - Default
   - TransparentFX
