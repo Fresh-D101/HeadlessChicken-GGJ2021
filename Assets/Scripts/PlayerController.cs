@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Toolbox.Editor.Hierarchy;
-using Toolbox.Editor.Drawers;
+﻿using UnityEngine;
 
 namespace Player
 {
@@ -28,7 +24,7 @@ namespace Player
         {
             // Interaction and Head Inputs
             if (Input.GetKeyDown(KeyCode.X)) DropHead();
-            if (Input.GetButtonDown("Interact")) m_InteractionInput = true;
+            m_InteractionInput = Input.GetButtonDown("Interact");
 
             if (BlockInputs) return;
 
@@ -147,6 +143,7 @@ namespace Player
         public float MaximumVelocity { get => m_MaximumVelocity; set => m_MaximumVelocity = value; }
         public bool CanClimb { get => m_CanClimb; set => m_CanClimb = value; }
         public bool PreventFalling { get => m_PreventFalling; set { m_PreventFalling = value; ResetConstraints(); } }
+        public bool IsGrounded => m_IsGrounded;
 
         //////////////////////////////////////////////////////////////////////////
 

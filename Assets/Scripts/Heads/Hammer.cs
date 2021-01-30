@@ -15,7 +15,7 @@ public class Hammer : Head
 
     private void OnTriggerExit(Collider _other)
     {
-        if (_other.CompareTag(m_ClimbableTag))
+        if (_other.CompareTag(m_ClimbableTag) && !ReferenceEquals(m_Owner, null))
         {
             m_Owner.CanClimb = false;
             m_Owner.PreventFalling = false;
