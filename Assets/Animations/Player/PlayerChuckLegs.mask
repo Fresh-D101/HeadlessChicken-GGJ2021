@@ -13,20 +13,6 @@ AvatarMask:
     m_Weight: 1
   - m_Path: chuck_main
     m_Weight: 0
-  - m_Path: ikHandle1
-    m_Weight: 0
-  - m_Path: ikHandle2
-    m_Weight: 0
-  - m_Path: ikHandle3
-    m_Weight: 0
-  - m_Path: ikHandle4
-    m_Weight: 0
-  - m_Path: ikHandle5
-    m_Weight: 0
-  - m_Path: ikHandle6
-    m_Weight: 0
-  - m_Path: ikHandle7
-    m_Weight: 0
   - m_Path: j_core
     m_Weight: 0
   - m_Path: j_core/j_belly
