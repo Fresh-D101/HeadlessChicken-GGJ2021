@@ -647,6 +647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Rigidbody: {fileID: 1255257037202356267}
+  m_JointRigidbodys: []
   m_HeadPosition: {fileID: 1255257035439689247}
   m_GroundedCheck: {fileID: 1255257035520824425}
   m_GroundedCheckRadius: 0.45
@@ -656,14 +657,20 @@ MonoBehaviour:
   m_Acceleration: 1.5
   m_Rotation: 3
   m_JumpStrength: 25
+  m_JumpDelay: 0.5
   m_MaximumVelocity: 4
   m_ClimableTag: Climbable
+  m_blockInputs: 0
   m_HorizontalInput: 0
   m_VerticalInput: 0
+  m_JumpInput: 0
+  m_InteractionInput: 0
   m_TargetVelocity: {x: 0, y: 0, z: 0}
   m_AppliedVelocity: {x: 0, y: 0, z: 0}
-  m_JumpInput: 0
   m_IsGrounded: 0
+  m_IsFalling: 0
+  m_CanJump: 0
+  m_PreventFalling: 0
   m_CanClimb: 0
 --- !u!1 &1255257037458452375
 GameObject:

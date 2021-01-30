@@ -10,6 +10,13 @@ namespace Player
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerController : MonoBehaviour
     {
+        private void Awake()
+        {
+            m_CanJump = true;
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+
         private void Reset()
         {
             this.TryGetComponent<Rigidbody>(out m_Rigidbody);
@@ -19,15 +26,19 @@ namespace Player
 
         private void Update()
         {
-            m_HorizontalInput = Input.GetAxisRaw("Horizontal");
-            m_VerticalInput = Input.GetAxisRaw("Vertical");
-            if (Input.GetButtonDown("Jump")) m_JumpInput = true;
+            // Interaction and Head Inputs
             if (Input.GetKeyDown(KeyCode.X)) DropHead();
             if (Input.GetButtonDown("Interact")) m_InteractionInput = true;
 
+            if (BlockInputs) return;
+
+            // Movement Inputs
+            m_HorizontalInput = Input.GetAxisRaw("Horizontal");
+            m_VerticalInput = Input.GetAxisRaw("Vertical");
+            if (Input.GetButtonDown("Jump")) m_JumpInput = true;
             m_Rigidbody.MoveRotation(Quaternion.Euler(0, this.transform.localEulerAngles.y + m_HorizontalInput * m_Rotation, 0));
         }
-        
+
         //////////////////////////////////////////////////////////////////////////
 
         private void OnTriggerStay(Collider _otherCollider)
@@ -38,7 +49,7 @@ namespace Player
                 m_InteractionInput = false;
             }
         }
-        
+
         //////////////////////////////////////////////////////////////////////////
 
         #region Movement
@@ -46,6 +57,9 @@ namespace Player
         private void FixedUpdate()
         {
             m_IsGrounded = Physics.CheckSphere(m_GroundedCheck.position, m_GroundedCheckRadius, m_GroundedCheckLayers);
+            m_IsFalling = (m_Rigidbody.velocity.y < 0.00001f);
+
+            if (m_PreventFalling && m_IsFalling) SetConstraints();
 
             Move();
             Jump();
@@ -68,11 +82,43 @@ namespace Player
 
         private void Jump()
         {
+            if (!m_CanJump)
+            {
+                m_JumpInput = false;
+                return;
+            }
+
             if (m_JumpInput && (m_IsGrounded || CanClimb))
             {
+                ResetConstraints();
                 m_Rigidbody.AddForce(Vector3.up * m_JumpStrength, ForceMode.VelocityChange);
+                m_CanJump = false;
+                LeanTween.delayedCall(m_JumpDelay, () => { m_CanJump = true; });
                 m_JumpInput = false;
             }
+            else if (m_JumpInput)
+            {
+                m_JumpInput = false;
+                return;
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+
+        public void SetConstraints()
+        {
+            m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionX;
+            m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionY;
+            m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionZ;
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+
+        public void ResetConstraints()
+        {
+            m_Rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
+            m_Rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
+            m_Rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionZ;
         }
 
         #endregion
@@ -86,6 +132,8 @@ namespace Player
             m_EquippedHead.OnPickup(this, m_HeadPosition);
         }
 
+        //////////////////////////////////////////////////////////////////////////
+
         private void DropHead()
         {
             if (ReferenceEquals(m_EquippedHead, null)) return;
@@ -95,8 +143,10 @@ namespace Player
 
         //////////////////////////////////////////////////////////////////////////
 
+        public bool BlockInputs { get => m_blockInputs; set => m_blockInputs = value; }
         public float MaximumVelocity { get => m_MaximumVelocity; set => m_MaximumVelocity = value; }
         public bool CanClimb { get => m_CanClimb; set => m_CanClimb = value; }
+        public bool PreventFalling { get => m_PreventFalling; set { m_PreventFalling = value; ResetConstraints(); } }
 
         //////////////////////////////////////////////////////////////////////////
 
@@ -113,6 +163,7 @@ namespace Player
         [SerializeField] private float m_Acceleration = 0;
         [SerializeField] private float m_Rotation = 0;
         [SerializeField] private float m_JumpStrength = 0;
+        [SerializeField] private float m_JumpDelay = 0;
         [Separator]
         [SerializeField, EndGroup] private float m_MaximumVelocity = 0;
 
@@ -120,13 +171,20 @@ namespace Player
         [SerializeField, TagSelector, EndGroup] private string m_ClimableTag = string.Empty;
 
         [BeginGroup("Information")]
+        [SerializeField, ReadOnlyField] private bool m_blockInputs;
+        [Separator]
         [SerializeField, ReadOnlyField] private float m_HorizontalInput = 0;
         [SerializeField, ReadOnlyField] private float m_VerticalInput = 0;
-        [SerializeField, ReadOnlyField] private Vector3 m_TargetVelocity = Vector3.zero;
-        [SerializeField, ReadOnlyField] private Vector3 m_AppliedVelocity = Vector3.zero;
         [SerializeField, ReadOnlyField] private bool m_JumpInput = false;
         [SerializeField, ReadOnlyField] private bool m_InteractionInput = false;
+        [Separator]
+        [SerializeField, ReadOnlyField] private Vector3 m_TargetVelocity = Vector3.zero;
+        [SerializeField, ReadOnlyField] private Vector3 m_AppliedVelocity = Vector3.zero;
+        [Separator]
         [SerializeField, ReadOnlyField] private bool m_IsGrounded = false;
+        [SerializeField, ReadOnlyField] private bool m_IsFalling = false;
+        [SerializeField, ReadOnlyField] private bool m_CanJump = false;
+        [SerializeField, ReadOnlyField] private bool m_PreventFalling = false;
         [SerializeField, ReadOnlyField, EndGroup] private bool m_CanClimb = false;
 
         private Head m_EquippedHead = null;

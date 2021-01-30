@@ -7,6 +7,7 @@ public class Hammer : Head
         if (_other.CompareTag(m_ClimbableTag))
         {
             m_Owner.CanClimb = true;
+            m_Owner.PreventFalling = true;
         }
     }
 
@@ -17,9 +18,10 @@ public class Hammer : Head
         if (_other.CompareTag(m_ClimbableTag))
         {
             m_Owner.CanClimb = false;
+            m_Owner.PreventFalling = false;
         }
     }
-    
+
     //////////////////////////////////////////////////////////////////////////
 
     [SerializeField, TagSelector] private string m_ClimbableTag = string.Empty;
