@@ -3,7 +3,7 @@
 public interface IHead
 {
     GameObject gameObj { get; }
-    
-    void OnPickup(SimpleMove _owner);
-    void OnDrop(SimpleMove _owner);
+
+    void OnPickup(Player.PlayerController _owner);
+    void OnDrop(Player.PlayerController _owner);
 }

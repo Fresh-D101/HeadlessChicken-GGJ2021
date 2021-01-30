@@ -4,9 +4,9 @@ public class Hammer : MonoBehaviour,IHead
 {
     private void OnTriggerEnter(Collider _other)
     {
-        if (_other.CompareTag("Climbable"))
+        if (_other.CompareTag(m_ClimbableTag))
         {
-            m_Owner.canClimb = true;
+            m_Owner.CanClimb = true;
         }
     }
 
@@ -14,31 +14,33 @@ public class Hammer : MonoBehaviour,IHead
 
     private void OnTriggerExit(Collider _other)
     {
-        if (_other.CompareTag("Climbable"))
+        if (_other.CompareTag(m_ClimbableTag))
         {
-            m_Owner.canClimb = false;
+            m_Owner.CanClimb = false;
         }
     }
-    
-    //////////////////////////////////////////////////////////////////////////
-    
-    public GameObject gameObj => gameObject;
-    
+
     //////////////////////////////////////////////////////////////////////////
 
-    public void OnPickup(SimpleMove _owner)
+    public GameObject gameObj => gameObject;
+
+    //////////////////////////////////////////////////////////////////////////
+
+    public void OnPickup(Player.PlayerController _owner)
     {
         m_Owner = _owner;
     }
-    
+
     //////////////////////////////////////////////////////////////////////////
 
-    public void OnDrop(SimpleMove _owner)
+    public void OnDrop(Player.PlayerController _owner)
     {
         m_Owner = null;
     }
-    
+
     //////////////////////////////////////////////////////////////////////////
-    
-    private SimpleMove m_Owner;
+
+    [SerializeField, TagSelector] private string m_ClimbableTag = string.Empty;
+    [Separator]
+    [SerializeField, ReadOnlyField] private Player.PlayerController m_Owner;
 }

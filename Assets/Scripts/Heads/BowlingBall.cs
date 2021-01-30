@@ -2,21 +2,23 @@
 
 public class BowlingBall : MonoBehaviour, IHead
 {
-    public void OnPickup(SimpleMove _owner)
+    public void OnPickup(Player.PlayerController _owner)
     {
-        m_OriginalSpeed = _owner.Speed;
-        _owner.SetSpeed(4);
+        m_Owner = _owner;
+        m_OriginalSpeed = m_Owner.MaximumVelocity;
+        m_Owner.MaximumVelocity = m_NewSpeed;
     }
 
     //////////////////////////////////////////////////////////////////////////
-    
-    public void OnDrop(SimpleMove _owner)
+
+    public void OnDrop(Player.PlayerController _owner)
     {
-        _owner.SetSpeed(m_OriginalSpeed);
+        m_Owner.MaximumVelocity = m_OriginalSpeed;
+        m_Owner = null;
     }
 
     //////////////////////////////////////////////////////////////////////////
-    
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Breakable"))
@@ -26,11 +28,13 @@ public class BowlingBall : MonoBehaviour, IHead
     }
 
     //////////////////////////////////////////////////////////////////////////
-    
+
     public GameObject gameObj => gameObject;
 
     //////////////////////////////////////////////////////////////////////////
-    
-    private float m_OriginalSpeed;
-    private SimpleMove m_Owner;
+
+    [SerializeField] private float m_NewSpeed = 0;
+    [Separator]
+    [SerializeField, ReadOnlyField] private Player.PlayerController m_Owner = null;
+    [SerializeField, ReadOnlyField] private float m_OriginalSpeed = 0;
 }
