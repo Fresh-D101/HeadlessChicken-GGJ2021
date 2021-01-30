@@ -23,6 +23,7 @@ namespace Player
             m_VerticalInput = Input.GetAxisRaw("Vertical");
             if (Input.GetButtonDown("Jump")) m_JumpInput = true;
             if (Input.GetKeyDown(KeyCode.X)) DropHead();
+            if (Input.GetButtonDown("Interact")) m_InteractionInput = true;
 
             m_Rigidbody.MoveRotation(Quaternion.Euler(0, this.transform.localEulerAngles.y + m_HorizontalInput * m_Rotation, 0));
         }
@@ -31,9 +32,10 @@ namespace Player
 
         private void OnTriggerStay(Collider _otherCollider)
         {
-            if (Input.GetButtonDown("Interact") && _otherCollider.TryGetComponent<Head>(out var newHead))
+            if (m_InteractionInput && _otherCollider.TryGetComponent<Head>(out var newHead))
             {
                 EquipHead(newHead);
+                m_InteractionInput = false;
             }
         }
         
@@ -123,6 +125,7 @@ namespace Player
         [SerializeField, ReadOnlyField] private Vector3 m_TargetVelocity = Vector3.zero;
         [SerializeField, ReadOnlyField] private Vector3 m_AppliedVelocity = Vector3.zero;
         [SerializeField, ReadOnlyField] private bool m_JumpInput = false;
+        [SerializeField, ReadOnlyField] private bool m_InteractionInput = false;
         [SerializeField, ReadOnlyField] private bool m_IsGrounded = false;
         [SerializeField, ReadOnlyField, EndGroup] private bool m_CanClimb = false;
 
