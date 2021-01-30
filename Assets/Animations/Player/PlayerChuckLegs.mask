@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PlayerChuckLegs
+  m_Mask: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: chuck_main
+    m_Weight: 0
+  - m_Path: ikHandle1
+    m_Weight: 0
+  - m_Path: ikHandle2
+    m_Weight: 0
+  - m_Path: ikHandle3
+    m_Weight: 0
+  - m_Path: ikHandle4
+    m_Weight: 0
+  - m_Path: ikHandle5
+    m_Weight: 0
+  - m_Path: ikHandle6
+    m_Weight: 0
+  - m_Path: ikHandle7
+    m_Weight: 0
+  - m_Path: j_core
+    m_Weight: 0
+  - m_Path: j_core/j_belly
+    m_Weight: 0
+  - m_Path: j_core/j_belly/j_chest
+    m_Weight: 0
+  - m_Path: j_core/j_belly/j_chest/j_l_shoulder
+    m_Weight: 0
+  - m_Path: j_core/j_belly/j_chest/j_l_shoulder/j_l_wing
+    m_Weight: 0
+  - m_Path: j_core/j_belly/j_chest/j_l_shoulder/j_l_wing/j_l_feathers
+    m_Weight: 0
+  - m_Path: j_core/j_belly/j_chest/j_neck_1
+    m_Weight: 0
+  - m_Path: j_core/j_belly/j_chest/j_neck_1/j_neck_2
+    m_Weight: 0
+  - m_Path: j_core/j_belly/j_chest/j_neck_1/j_neck_2/j_head
+    m_Weight: 0
+  - m_Path: j_core/j_belly/j_chest/j_neck_1/j_neck_2/j_head/j_head_top
+    m_Weight: 0
+  - m_Path: j_core/j_belly/j_chest/j_r_shoulder
+    m_Weight: 0
+  - m_Path: j_core/j_belly/j_chest/j_r_shoulder/j_r_wing
+    m_Weight: 0
+  - m_Path: j_core/j_belly/j_chest/j_r_shoulder/j_r_wing/j_r_feathers
+    m_Weight: 0
+  - m_Path: j_core/j_l_leg_1
+    m_Weight: 1
+  - m_Path: j_core/j_l_leg_1/j_l_leg_2
+    m_Weight: 1
+  - m_Path: j_core/j_l_leg_1/j_l_leg_2/j_l_leg_3
+    m_Weight: 1
+  - m_Path: j_core/j_l_leg_1/j_l_leg_2/j_l_leg_3/j_l_foot_1
+    m_Weight: 1
+  - m_Path: j_core/j_l_leg_1/j_l_leg_2/j_l_leg_3/j_l_foot_1/j_l_foot_2
+    m_Weight: 1
+  - m_Path: j_core/j_l_leg_1/j_l_leg_2/j_l_leg_3/j_l_foot_1/j_l_foot_2/j_l_foot_3
+    m_Weight: 1
+  - m_Path: j_core/j_r_leg_1
+    m_Weight: 1
+  - m_Path: j_core/j_r_leg_1/j_r_leg_2
+    m_Weight: 1
+  - m_Path: j_core/j_r_leg_1/j_r_leg_2/j_r_leg_3
+    m_Weight: 1
+  - m_Path: j_core/j_r_leg_1/j_r_leg_2/j_r_leg_3/j_r_foot_1
+    m_Weight: 1
+  - m_Path: j_core/j_r_leg_1/j_r_leg_2/j_r_leg_3/j_r_foot_1/j_r_foot_2
+    m_Weight: 1
+  - m_Path: j_core/j_r_leg_1/j_r_leg_2/j_r_leg_3/j_r_foot_1/j_r_foot_2/j_r_foot_3
+    m_Weight: 1
+  - m_Path: j_core/j_tail_1
+    m_Weight: 0
+  - m_Path: j_core/j_tail_1/j_tail_2
+    m_Weight: 0
+  - m_Path: j_core/j_tail_1/j_tail_2/j_tail_3
+    m_Weight: 0
+  - m_Path: j_core/j_tail_1/j_tail_2/j_tail_3/j_tail_4
+    m_Weight: 0
+  - m_Path: pCube1
+    m_Weight: 0
+  - m_Path: pCube1/transform3
+    m_Weight: 0
+  - m_Path: pCube2
+    m_Weight: 0
+  - m_Path: pCube2/transform2
+    m_Weight: 0
+  - m_Path: polySurface3
+    m_Weight: 0
+  - m_Path: polySurface3/transform1
+    m_Weight: 0
