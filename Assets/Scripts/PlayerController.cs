@@ -147,6 +147,8 @@ namespace Player
         public bool CanClimb { get => m_CanClimb; set => m_CanClimb = value; }
         public bool PreventFalling { get => m_PreventFalling; set { m_PreventFalling = value; ResetConstraints(); } }
         public bool IsGrounded => m_IsGrounded;
+        public Rigidbody Rigidbody => m_Rigidbody;
+        public bool IsFalling => m_IsFalling;
 
         //////////////////////////////////////////////////////////////////////////
 

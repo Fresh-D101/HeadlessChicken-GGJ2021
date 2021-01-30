@@ -6,4 +6,5 @@ public class Zipline : MonoBehaviour
 {
     public Transform Start;
     public Transform Stop;
+    public Joint Anchor;
 }
