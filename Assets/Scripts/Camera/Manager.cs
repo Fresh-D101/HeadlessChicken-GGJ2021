@@ -44,7 +44,7 @@ namespace GameCamera
             if (_cameraAnchor == null) return;
 
             m_MainCameraBlackscreen.blocksRaycasts = true;
-            LeanTween.value(this.gameObject, (value) => { m_MainCameraBlackscreen.alpha = value; }, 0, 1, m_FadeInTime).setOnComplete(() => { MoveCameraToAnchor(_cameraAnchor); });
+            LeanTween.value(this.gameObject, (value) => { m_MainCameraBlackscreen.alpha = value; }, m_MainCameraBlackscreen.alpha, 1, m_FadeInTime).setOnComplete(() => { MoveCameraToAnchor(_cameraAnchor); });
             LeanTween.value(this.gameObject, (value) => { m_MainCameraBlackscreen.alpha = value; }, 1, 0, m_FadeOutTime).setOnComplete(() => { m_MainCameraBlackscreen.blocksRaycasts = false; }).setDelay(m_FadeInTime + m_FadeOutDelay);
         }
 
