@@ -6,14 +6,14 @@ public abstract class Head : MonoBehaviour
     protected virtual void OnDrop() {}
 
     //////////////////////////////////////////////////////////////////////////
-    
+
     private void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
     }
-    
+
     //////////////////////////////////////////////////////////////////////////
-    
+
     public void OnPickup(PlayerController _owner, Transform _headPos)
     {
         m_Owner = _owner;
@@ -26,7 +26,7 @@ public abstract class Head : MonoBehaviour
     }
 
     //////////////////////////////////////////////////////////////////////////
-    
+
     public void OnDrop(PlayerController _owner)
     {
         OnDrop();
@@ -42,7 +42,7 @@ public abstract class Head : MonoBehaviour
     //////////////////////////////////////////////////////////////////////////
 
     protected PlayerController m_Owner;
-    
+
     [SerializeField] private Collider m_PickUpTrigger;
     [SerializeField] private float m_DropForce;
     private Rigidbody m_Rigidbody;

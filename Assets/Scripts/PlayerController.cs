@@ -34,9 +34,9 @@ namespace Player
             m_HorizontalInput = Input.GetAxisRaw("Horizontal");
             m_VerticalInput = Input.GetAxisRaw("Vertical");
             if (Input.GetButtonDown("Jump")) m_JumpInput = true;
-            m_Rigidbody.MoveRotation(Quaternion.Euler(0, this.transform.localEulerAngles.y + m_HorizontalInput * m_Rotation, 0));
+            Rotate();
         }
-        
+
         //////////////////////////////////////////////////////////////////////////
 
         #region Movement
@@ -44,7 +44,7 @@ namespace Player
         private void FixedUpdate()
         {
             m_IsGrounded = Physics.CheckSphere(m_GroundedCheck.position, m_GroundedCheckRadius, m_GroundedCheckLayers);
-            m_IsFalling = (m_Rigidbody.velocity.y < 0.00001f);
+            m_IsFalling = (m_Rigidbody.velocity.y < -0.00001f);
 
             if (m_PreventFalling && m_IsFalling) SetConstraints();
 
@@ -56,13 +56,38 @@ namespace Player
 
         private void Move()
         {
-            m_TargetVelocity = transform.forward * (m_VerticalInput * MaximumVelocity);
-            m_AppliedVelocity = m_TargetVelocity - m_Rigidbody.velocity;
-            Vector2 clampedVelocity = Vector2.ClampMagnitude(new Vector2(m_AppliedVelocity.x, m_AppliedVelocity.z), m_Acceleration);
-            m_AppliedVelocity.x = clampedVelocity.x;
-            m_AppliedVelocity.y = 0;
-            m_AppliedVelocity.z = clampedVelocity.y;
-            m_Rigidbody.AddForce(m_AppliedVelocity, ForceMode.VelocityChange);
+            if (m_VerticalInput != 0)
+            {
+                m_MovementSpeedLerp += m_LerpRates.x * Time.fixedDeltaTime;
+            }
+            else
+            {
+                m_MovementSpeedLerp -= m_LerpRates.y * Time.fixedDeltaTime;
+            }
+
+            m_MovementSpeedLerp = Mathf.Clamp01(m_MovementSpeedLerp);
+
+            m_TargetVelocity = this.transform.forward * (m_VerticalInput * Mathf.Lerp(MovementSpeedRange.x, MovementSpeedRange.y, m_MovementSpeedLerp)) * Time.fixedDeltaTime;
+            m_TargetVelocity.y = m_Rigidbody.velocity.y;
+            m_Rigidbody.velocity = m_TargetVelocity;
+
+            if (new Vector2(m_Rigidbody.velocity.x, m_Rigidbody.velocity.z).magnitude > 0)
+            {
+                m_Animator.SetBool("IsWalking", true);
+            }
+            else
+            {
+                m_Animator.SetBool("IsWalking", false);
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+
+        private void Rotate()
+        {
+            if (m_HorizontalInput != 0) m_MovementSpeedLerp -= m_RotationSpeedLerpDecrease * Time.fixedDeltaTime;
+            m_MovementSpeedLerp = Mathf.Clamp01(m_MovementSpeedLerp);
+            m_Rigidbody.MoveRotation(Quaternion.Euler(0, this.transform.localEulerAngles.y + m_HorizontalInput * m_Rotation, 0));
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -115,13 +140,13 @@ namespace Player
         private void CheckForHead()
         {
             var nearest = new Collider[1];
-            var heads = Physics.OverlapSphereNonAlloc(transform.position, 2, nearest,m_HeadLayer);
+            var heads = Physics.OverlapSphereNonAlloc(transform.position, 2, nearest, m_HeadLayer);
             if (heads != 0)
             {
                 EquipHead(nearest[0].GetComponent<Head>());
             }
         }
-        
+
         //////////////////////////////////////////////////////////////////////////
 
         private void EquipHead(Head _head)
@@ -142,8 +167,8 @@ namespace Player
 
         //////////////////////////////////////////////////////////////////////////
 
+        public Vector2 MovementSpeedRange { get => m_MovementSpeedRange; set => m_MovementSpeedRange = value; }
         public bool BlockInputs { get => m_blockInputs; set => m_blockInputs = value; }
-        public float MaximumVelocity { get => m_MaximumVelocity; set => m_MaximumVelocity = value; }
         public bool CanClimb { get => m_CanClimb; set => m_CanClimb = value; }
         public bool PreventFalling { get => m_PreventFalling; set { m_PreventFalling = value; ResetConstraints(); } }
         public bool IsGrounded => m_IsGrounded;
@@ -154,6 +179,7 @@ namespace Player
 
         [BeginGroup("References")]
         [SerializeField] private Rigidbody m_Rigidbody = null;
+        [SerializeField] private Animator m_Animator = null;
         [SerializeField, EndGroup] private Transform m_HeadPosition = null;
 
         [BeginGroup("Ground Check")]
@@ -163,13 +189,15 @@ namespace Player
         [SerializeField, EndGroup] private LayerMask m_HeadLayer = default;
 
         [BeginGroup("Movement")]
-        [SerializeField] private float m_Acceleration = 0;
-        [SerializeField] private float m_Rotation = 0;
-        [SerializeField] private float m_JumpStrength = 0;
-        [SerializeField] private float m_JumpDelay = 0;
+        [SerializeField, MinMaxSlider(0, 1000)] private Vector2 m_MovementSpeedRange = Vector2.zero;
+        [SerializeField] private Vector2 m_LerpRates = Vector2.zero;
+        [SerializeField, ReadOnlyField] private float m_MovementSpeedLerp = 0;
         [Separator]
-        [SerializeField, EndGroup] private float m_MaximumVelocity = 0;
-        
+        [SerializeField] private float m_Rotation = 0;
+        [SerializeField] private float m_RotationSpeedLerpDecrease = 0;
+        [SerializeField] private float m_JumpStrength = 0;
+        [SerializeField, EndGroup] private float m_JumpDelay = 0;
+
         [BeginGroup("Information")]
         [SerializeField, ReadOnlyField] private bool m_blockInputs;
         [Separator]

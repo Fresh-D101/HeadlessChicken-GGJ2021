@@ -7,11 +7,13 @@ public class Hook : Head
     {
         if (other.CompareTag(m_ZiplineTag) && !m_Owner.IsGrounded && !m_IsSliding)
         {
-            var zipline = other.GetComponent<Zipline>();
+            var zipline = other.GetComponentInParent<Zipline>();
             StartCoroutine(SlideDown(zipline.Anchor, zipline.Start.position, zipline.Stop.position));
             m_Owner.BlockInputs = true;
         }       
     }
+    
+    //////////////////////////////////////////////////////////////////////////
 
     private IEnumerator SlideDown(Joint _anchor, Vector3 _start, Vector3 _stop)
     {
@@ -21,7 +23,6 @@ public class Hook : Head
         _anchor.connectedAnchor = new Vector3(0, 1, 0);
         var length = Vector3.Distance(_start, _stop);
         float traveled = 0;
-        yield return new WaitForSeconds(0.3f);
         var spd = 1f;
         while (traveled < length)
         {
@@ -37,6 +38,8 @@ public class Hook : Head
         _anchor.gameObject.transform.position = _start;
     }
 
+    //////////////////////////////////////////////////////////////////////////
+    
     private bool m_IsSliding;
     [SerializeField] private float m_SlideSpeed;
     [SerializeField, TagSelector] private string m_ZiplineTag;

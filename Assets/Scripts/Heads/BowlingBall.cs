@@ -4,15 +4,15 @@ public class BowlingBall : Head
 {
     protected override void  OnPickup()
     {
-        m_OriginalSpeed = m_Owner.MaximumVelocity;
-        m_Owner.MaximumVelocity = m_NewSpeed;
+        m_OriginalSpeedRange = m_Owner.MovementSpeedRange;
+        m_Owner.MovementSpeedRange = m_NewSpeedRange;
     }
 
     //////////////////////////////////////////////////////////////////////////
 
     protected override void OnDrop()
     {
-        m_Owner.MaximumVelocity = m_OriginalSpeed;
+        m_Owner.MovementSpeedRange = m_OriginalSpeedRange;
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@ public class BowlingBall : Head
     private void OnTriggerEnter(Collider other)
     {
         if (m_Owner is null) return;
-        
+
         if (other.CompareTag("Breakable"))
         {
             other.GetComponent<Breakable>()?.Break();
@@ -33,7 +33,7 @@ public class BowlingBall : Head
 
     //////////////////////////////////////////////////////////////////////////
 
-    [SerializeField] private float m_NewSpeed = 0;
+    [SerializeField, MinMaxSlider(0, 1000)] private Vector2 m_NewSpeedRange = Vector2.zero;
     [Separator]
-    [SerializeField, ReadOnlyField] private float m_OriginalSpeed = 0;
+    [SerializeField, MinMaxSlider(0, 1000), ReadOnlyField] private Vector2 m_OriginalSpeedRange = Vector2.zero;
 }
