@@ -9,7 +9,7 @@ public class Breakable : MonoBehaviour
     
     //////////////////////////////////////////////////////////////////////////
     
-    public void Break()
+    public void Break(Vector3 _pos, float _force)
     {
         GetComponent<Collider>().enabled = false;
         transform.DetachChildren();
@@ -18,6 +18,7 @@ public class Breakable : MonoBehaviour
         foreach (var fragment in m_Particles)
         {
             fragment.isKinematic = false;
+            fragment.AddExplosionForce(_force, _pos, 10);
         }
     }
     

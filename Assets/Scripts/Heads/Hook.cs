@@ -12,6 +12,7 @@ public class Hook : Head
         if (other.CompareTag(m_ZiplineTag) && !m_Owner.IsGrounded && !m_IsSliding)
         {
             var zipline = other.GetComponentInParent<Zipline>();
+            m_Owner.transform.rotation = zipline.Start.rotation;
             StartCoroutine(SlideDown(zipline.Anchor, zipline.Start.position, zipline.Stop.position));
             m_Owner.BlockInputs = true;
         }       
@@ -28,6 +29,7 @@ public class Hook : Head
         var length = Vector3.Distance(_start, _stop);
         float traveled = 0;
         var spd = 1f;
+        yield return new WaitForSeconds(0.2f);
         while (traveled < length)
         {
             spd = spd >= m_SlideSpeed ? m_SlideSpeed : spd + 03f;

@@ -26,7 +26,7 @@ public class BowlingBall : Head
 
         if (other.CompareTag("Breakable") && m_Owner.CurrentSpeed >= m_MinimumBreakSpeed)
         {
-            other.GetComponent<Breakable>()?.Break();
+            other.GetComponent<Breakable>()?.Break(other.ClosestPoint(transform.position), m_Owner.CurrentSpeed * 2);
         }
     }
 
