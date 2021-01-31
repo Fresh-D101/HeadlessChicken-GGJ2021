@@ -6,6 +6,8 @@ public class BowlingBall : Head
     {
         m_OriginalSpeedRange = m_Owner.MovementSpeedRange;
         m_Owner.MovementSpeedRange = m_NewSpeedRange;
+        m_OriginalRotLerp = m_Owner.RotationSpeedLerpDecrease;
+        m_Owner.RotationSpeedLerpDecrease = 0f;
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -13,6 +15,7 @@ public class BowlingBall : Head
     protected override void OnDrop()
     {
         m_Owner.MovementSpeedRange = m_OriginalSpeedRange;
+        m_Owner.RotationSpeedLerpDecrease = m_OriginalRotLerp;
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -21,7 +24,7 @@ public class BowlingBall : Head
     {
         if (m_Owner is null) return;
 
-        if (other.CompareTag("Breakable"))
+        if (other.CompareTag("Breakable") && m_Owner.CurrentSpeed >= m_MinimumBreakSpeed)
         {
             other.GetComponent<Breakable>()?.Break();
         }
@@ -34,6 +37,8 @@ public class BowlingBall : Head
     //////////////////////////////////////////////////////////////////////////
 
     [SerializeField, MinMaxSlider(0, 1000)] private Vector2 m_NewSpeedRange = Vector2.zero;
+    [SerializeField] private float m_MinimumBreakSpeed;
     [Separator]
     [SerializeField, MinMaxSlider(0, 1000), ReadOnlyField] private Vector2 m_OriginalSpeedRange = Vector2.zero;
+    [SerializeField, ReadOnlyField] private float m_OriginalRotLerp;
 }

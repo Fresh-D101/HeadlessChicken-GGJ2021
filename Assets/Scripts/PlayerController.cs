@@ -67,7 +67,8 @@ namespace Player
 
             m_MovementSpeedLerp = Mathf.Clamp01(m_MovementSpeedLerp);
 
-            m_TargetVelocity = this.transform.forward * (m_VerticalInput * Mathf.Lerp(MovementSpeedRange.x, MovementSpeedRange.y, m_MovementSpeedLerp)) * Time.fixedDeltaTime;
+            m_CurrentSpeed = Mathf.Lerp(MovementSpeedRange.x, MovementSpeedRange.y, m_MovementSpeedLerp);
+            m_TargetVelocity = this.transform.forward * (m_VerticalInput * m_CurrentSpeed * Time.fixedDeltaTime);
             m_TargetVelocity.y = m_Rigidbody.velocity.y;
             m_Rigidbody.velocity = m_TargetVelocity;
 
@@ -174,10 +175,13 @@ namespace Player
         public bool IsGrounded => m_IsGrounded;
         public Rigidbody Rigidbody => m_Rigidbody;
         public bool IsFalling => m_IsFalling;
-
+        public float CurrentSpeed => m_CurrentSpeed;
+        public float RotationSpeedLerpDecrease { get => m_RotationSpeedLerpDecrease; set => m_RotationSpeedLerpDecrease = value; }
+        
         //////////////////////////////////////////////////////////////////////////
 
         [BeginGroup("References")]
+        
         [SerializeField] private Rigidbody m_Rigidbody = null;
         [SerializeField] private Animator m_Animator = null;
         [SerializeField, EndGroup] private Transform m_HeadPosition = null;
@@ -188,7 +192,7 @@ namespace Player
         [SerializeField] private LayerMask m_GroundedCheckLayers = default;
         [SerializeField, EndGroup] private LayerMask m_HeadLayer = default;
 
-        [BeginGroup("Movement")]
+        [BeginGroup("Movement")] [SerializeField, ReadOnlyField] private float m_CurrentSpeed;
         [SerializeField, MinMaxSlider(0, 1000)] private Vector2 m_MovementSpeedRange = Vector2.zero;
         [SerializeField] private Vector2 m_LerpRates = Vector2.zero;
         [SerializeField, ReadOnlyField] private float m_MovementSpeedLerp = 0;

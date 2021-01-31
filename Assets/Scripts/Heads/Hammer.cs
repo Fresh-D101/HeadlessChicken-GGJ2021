@@ -4,7 +4,7 @@ public class Hammer : Head
 {
     private void OnTriggerEnter(Collider _other)
     {
-        if (_other.CompareTag(m_ClimbableTag))
+        if (_other.CompareTag(m_ClimbableTag) && !ReferenceEquals(m_Owner, null))
         {
             m_Owner.CanClimb = true;
             m_Owner.PreventFalling = true;

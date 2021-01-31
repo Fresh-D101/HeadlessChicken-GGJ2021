@@ -21,7 +21,6 @@ public abstract class Head : MonoBehaviour
         transform.SetParent(_headPos);
         gameObject.layer = LayerMask.NameToLayer("AttachedHead");
         m_Rigidbody.isKinematic = true;
-        m_PickUpTrigger.enabled = false;
         OnPickup();
     }
 
@@ -35,15 +34,13 @@ public abstract class Head : MonoBehaviour
         transform.position += transform.up;
         m_Rigidbody.isKinematic = false;
         m_Rigidbody.velocity = (transform.forward + transform.up) * m_DropForce;
-        m_PickUpTrigger.enabled = true;
         m_Owner = null;
     }
 
     //////////////////////////////////////////////////////////////////////////
 
     protected PlayerController m_Owner;
-
-    [SerializeField] private Collider m_PickUpTrigger;
+    
     [SerializeField] private float m_DropForce;
     private Rigidbody m_Rigidbody;
 }

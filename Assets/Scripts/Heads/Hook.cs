@@ -1,10 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Hook : Head
 {
     private void OnTriggerStay(Collider other)
     {
+        if (ReferenceEquals(m_Owner, null)) return;
+        
         if (other.CompareTag(m_ZiplineTag) && !m_Owner.IsGrounded && !m_IsSliding)
         {
             var zipline = other.GetComponentInParent<Zipline>();
@@ -20,7 +24,7 @@ public class Hook : Head
         m_IsSliding = true;
         var rb = _anchor.GetComponent<Rigidbody>();
         _anchor.connectedBody = m_Owner.Rigidbody;
-        _anchor.connectedAnchor = new Vector3(0, 1, 0);
+        _anchor.connectedAnchor = new Vector3(0, 0.8f, 0);
         var length = Vector3.Distance(_start, _stop);
         float traveled = 0;
         var spd = 1f;
